@@ -1,0 +1,32 @@
+{
+  "name": "webscrapingforwork",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjtroiano0272/WebScrapingForWork.git"
+  },
+  "author": "Jonathan J. Troiano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjtroiano0272/WebScrapingForWork/issues"
+  },
+  "homepage": "https://github.com/jjtroiano0272/WebScrapingForWork#readme",
+  "dependencies": {
+    "cheerio": "*",
+    "got": "^11.8.2",
+    "node-fetch": "^2.6.1",
+    "npmvet": "^0.1.5",
+    "puppeteer": "^9.0.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  }
+}
