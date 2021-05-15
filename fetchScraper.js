@@ -4,6 +4,7 @@
 
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
+const puppeteer = require('puppeteer');
 const { URL, URLSearchParams } = require('url');
 
 
@@ -29,7 +30,22 @@ const getReddit = async () => {
 
 // TODO: Needs clicking script to view all
 const getGartner = async () => {
-    const response = await fetch('https://jobs.gartner.com/category/technology-jobs/494/58617/1'); // html response
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
+    
+    
+    // Click shit on page
+    // CREDIT JOZOTT @ STACK: 
+    // https://stackoverflow.com/questions/58087966/how-to-click-element-in-puppeteer-using-xpath
+    // Get the element. Returns an array of elements.
+    await page.$x('//*[@id="pagination-bottom"]/div[3]/a')
+    const elements = await page.$x('//*[@id="pagination-bottom"]/div[3]/a')
+    await elements[0].click() 
+
+    const response = await fetch(
+        'https://jobs.gartner.com/category/technology-jobs/494/58617/1'
+    ); // html response
     const body = await response.text();
 
     // Parse html for selector
@@ -37,35 +53,36 @@ const getGartner = async () => {
     const titleList = [];
     const locationList = [];
 
+    // Pulls job titles and pushes them to a list
     $('#search-results-list > ul > li > a > h2')
         .each(
             (i, title) => {
                 const titleNode = $(title);
                 const titleText = titleNode.text();
-                titleList.push({
-                    titleText,
-                    locationText
-                });
+                titleList.push(titleText);
             }
         );
-        console.log(titleList); // prints a chock full of HTML richness
+        // console.log(titleList); // prints a chock full of HTML richness
 
+    // Pulls job locations and pushes them to a list
     $('#search-results-list > ul > li > a > .job-location')
         .each(
             (i, location) => {
                 const locationNode = $(location);
                 const locationText = locationNode.text();
-                locationList.push({
-                    titleText,
-                    locationText
-                });
+                locationList.push(locationText);
             }
         );
-        console.log(titleList); // prints a chock full of HTML richness
-            
+        // console.log(locationList); // prints a chock full of HTML richness
+    
+    // Print both lists together pairwise
+    console.log(titleList.length+" jobs found!");
+    for (var i = 0; i < titleList.length - 1; i++) {
+        console.log(titleList[i], locationList[i]);
+    }
+
+    await browser.close();
 }
-        const locationNode = $(location);
-        const locationText = locationNode.text();
         
 {
 /* (async () => {
