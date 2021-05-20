@@ -29,56 +29,64 @@ const getReddit = async () => {
 }
 
 // TODO: Needs clicking script to view all
-const getGartner = async () => {
-    const browser = await puppeteer.launch();
+const getGartner = async (url) => {
+    const browser = await puppeteer.launch({
+        headless: true,
+        slowMo: 000,
+    });
     const page = await browser.newPage();
-    await page.goto('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
-    
+    await page.goto(url);
+
     
     // Click shit on page
     // CREDIT JOZOTT @ STACK: 
     // https://stackoverflow.com/questions/58087966/how-to-click-element-in-puppeteer-using-xpath
     // Get the element. Returns an array of elements.
-    await page.$x('//*[@id="pagination-bottom"]/div[3]/a')
-    const elements = await page.$x('//*[@id="pagination-bottom"]/div[3]/a')
-    await elements[0].click() 
+    await page.$x('//*[@id="pagination-bottom"]/div[3]/a'); // View all button
+    const elements = await page.$x('//*[@id="pagination-bottom"]/div[3]/a');
+    await elements[0].click(); // Click 'View All'
 
-    const response = await fetch(
-        'https://jobs.gartner.com/category/technology-jobs/494/58617/1'
-    ); // html response
-    const body = await response.text();
+    // Print updated vesion of page ater clicking. After clicking View All, DOM changes
+    // (number of ul > li items increases)
+    // OLD METHOD: const response = await fetch(url);
+    debugger;
+    const response_pupp = await page.evaluate(() => {
+        
+    }); // returns Promise
+    debugger;
+    // OLD METHOD: const body = await response.text();
+    const body_pupp = await page.content(); // HERES YOUR ERROR!
+    debugger;
 
     // Parse html for selector
-    const $ = cheerio.load(body);
+    const $ = await cheerio.load(body_pupp);
     const titleList = [];
     const locationList = [];
 
     // Pulls job titles and pushes them to a list
-    $('#search-results-list > ul > li > a > h2')
-        .each(
-            (i, title) => {
-                const titleNode = $(title);
-                const titleText = titleNode.text();
-                titleList.push(titleText);
-            }
-        );
-        // console.log(titleList); // prints a chock full of HTML richness
+    const titleSelector = '#search-results-list > ul > li > a > h2';
+    $(titleSelector).each(
+        (i, title) => {
+            const titleNode = $(title);
+            const titleText = titleNode.text(); 
+            titleList.push(titleText);
+        }
+    );
 
     // Pulls job locations and pushes them to a list
-    $('#search-results-list > ul > li > a > .job-location')
-        .each(
-            (i, location) => {
-                const locationNode = $(location);
-                const locationText = locationNode.text();
-                locationList.push(locationText);
-            }
-        );
-        // console.log(locationList); // prints a chock full of HTML richness
+    const locationSelector = '#search-results-list > ul > li > a > .job-location';
+    $(locationSelector).each(
+        (i, location) => {
+            const locationNode = $(location);
+            const locationText = locationNode.text();
+            locationList.push(locationText);
+        }
+    );
     
     // Print both lists together pairwise
-    console.log(titleList.length+" jobs found!");
+    console.log(titleList.length+" jobs found!\n\n");
     for (var i = 0; i < titleList.length - 1; i++) {
-        console.log(titleList[i], locationList[i]);
+        console.log(titleList[i], "\n  ", locationList[i], "\n");
     }
 
     await browser.close();
@@ -111,4 +119,4 @@ Promise.all([
 ]);  */ }
 
 // getReddit();
-getGartner();
+getGartner('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
