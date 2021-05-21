@@ -4,6 +4,7 @@
 
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
+const puppeteer = require('puppeteer');
 const { URL, URLSearchParams } = require('url');
 
 
@@ -27,45 +28,56 @@ const getReddit = async () => {
     console.log(titleList); // prints a chock full of HTML richness
 }
 
-// TODO: Needs clicking script to view all
-const getGartner = async () => {
-    const response = await fetch('https://jobs.gartner.com/category/technology-jobs/494/58617/1'); // html response
-    const body = await response.text();
+const getGartner = async (url) => {
+    const browser = await puppeteer.launch({
+        headless: true,
+        slowMo: 50,
+    });
+    const page = await browser.newPage();
+    await page.goto(url);
 
-    // Parse html for selector
-    const $ = cheerio.load(body);
+    // CREDIT JOZOTT @ STACK: 
+    // https://stackoverflow.com/questions/58087966/how-to-click-element-in-puppeteer-using-xpath
+    // Locate 'View All' button by xpath, then click it.
+    const elements = await page.$x('//*[@id="pagination-bottom"]/div[3]/a');
+    await elements[0].click();
+    
+    // Removing this breaks it. Go figure?
+    // debugger;
+    const body = await page.content();
+    
+    // Pulls job titles and pushes them to a list
+    const titleSelector = '#search-results-list > ul > li > a > h2';
     const titleList = [];
     const locationList = [];
+    const $ = await cheerio.load(body);
+    $(titleSelector).each(
+        (i, title) => {
+            const titleNode = $(title);
+            const titleText = titleNode.text(); 
+            titleList.push(titleText);
+        }
+    );
 
-    $('#search-results-list > ul > li > a > h2')
-        .each(
-            (i, title) => {
-                const titleNode = $(title);
-                const titleText = titleNode.text();
-                titleList.push({
-                    titleText,
-                    locationText
-                });
-            }
-        );
-        console.log(titleList); // prints a chock full of HTML richness
+    // Pulls job locations and pushes them to a list
+    const locationSelector = '#search-results-list > ul > li > a > .job-location';
+    $(locationSelector).each(
+        (i, location) => {
+            const locationNode = $(location);
+            const locationText = locationNode.text();
+            locationList.push(locationText);
+        }
+    );
+    
+    // Print both lists together pairwise
+    console.log(titleList.length+" jobs found!\n\n");
+    for (var i = 0; i < titleList.length - 1; i++) {
+        console.log(titleList[i], "\n  ", locationList[i], "\n");
+    }
+    console.log(titleList.length+" jobs found!\n\n");
 
-    $('#search-results-list > ul > li > a > .job-location')
-        .each(
-            (i, location) => {
-                const locationNode = $(location);
-                const locationText = locationNode.text();
-                locationList.push({
-                    titleText,
-                    locationText
-                });
-            }
-        );
-        console.log(titleList); // prints a chock full of HTML richness
-            
+    await browser.close();
 }
-        const locationNode = $(location);
-        const locationText = locationNode.text();
         
 {
 /* (async () => {
@@ -94,4 +106,4 @@ Promise.all([
 ]);  */ }
 
 // getReddit();
-getGartner();
+getGartner('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
