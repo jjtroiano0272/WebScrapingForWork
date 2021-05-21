@@ -28,43 +28,29 @@ const getReddit = async () => {
     console.log(titleList); // prints a chock full of HTML richness
 }
 
-// TODO: Needs clicking script to view all
 const getGartner = async (url) => {
     const browser = await puppeteer.launch({
         headless: true,
-        slowMo: 000,
+        slowMo: 50,
     });
     const page = await browser.newPage();
     await page.goto(url);
 
-    
-    // Click shit on page
     // CREDIT JOZOTT @ STACK: 
     // https://stackoverflow.com/questions/58087966/how-to-click-element-in-puppeteer-using-xpath
-    // Get the element. Returns an array of elements.
-    await page.$x('//*[@id="pagination-bottom"]/div[3]/a'); // View all button
+    // Locate 'View All' button by xpath, then click it.
     const elements = await page.$x('//*[@id="pagination-bottom"]/div[3]/a');
-    await elements[0].click(); // Click 'View All'
-
-    // Print updated vesion of page ater clicking. After clicking View All, DOM changes
-    // (number of ul > li items increases)
-    // OLD METHOD: const response = await fetch(url);
-    debugger;
-    const response_pupp = await page.evaluate(() => {
-        
-    }); // returns Promise
-    debugger;
-    // OLD METHOD: const body = await response.text();
-    const body_pupp = await page.content(); // HERES YOUR ERROR!
-    debugger;
-
-    // Parse html for selector
-    const $ = await cheerio.load(body_pupp);
-    const titleList = [];
-    const locationList = [];
-
+    await elements[0].click();
+    
+    // Removing this breaks it. Go figure?
+    // debugger;
+    const body = await page.content();
+    
     // Pulls job titles and pushes them to a list
     const titleSelector = '#search-results-list > ul > li > a > h2';
+    const titleList = [];
+    const locationList = [];
+    const $ = await cheerio.load(body);
     $(titleSelector).each(
         (i, title) => {
             const titleNode = $(title);
@@ -88,6 +74,7 @@ const getGartner = async (url) => {
     for (var i = 0; i < titleList.length - 1; i++) {
         console.log(titleList[i], "\n  ", locationList[i], "\n");
     }
+    console.log(titleList.length+" jobs found!\n\n");
 
     await browser.close();
 }
