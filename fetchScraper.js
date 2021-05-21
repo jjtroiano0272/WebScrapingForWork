@@ -28,14 +28,23 @@ const getReddit = async () => {
     console.log(titleList); // prints a chock full of HTML richness
 }
 
+<<<<<<< HEAD
 const getGartner = async (url) => {
     const browser = await puppeteer.launch({
         headless: true,
         slowMo: 50,
+=======
+// TODO: Needs clicking script to view all
+const getGartner = async (url) => {
+    const browser = await puppeteer.launch({
+        headless: true,
+        slowMo: 000,
+>>>>>>> 48e6cba2f5bab11bb951e63646caad655fe07cca
     });
     const page = await browser.newPage();
     await page.goto(url);
 
+<<<<<<< HEAD
     // CREDIT JOZOTT @ STACK: 
     // https://stackoverflow.com/questions/58087966/how-to-click-element-in-puppeteer-using-xpath
     // Locate 'View All' button by xpath, then click it.
@@ -51,6 +60,36 @@ const getGartner = async (url) => {
     const titleList = [];
     const locationList = [];
     const $ = await cheerio.load(body);
+=======
+    
+    // Click shit on page
+    // CREDIT JOZOTT @ STACK: 
+    // https://stackoverflow.com/questions/58087966/how-to-click-element-in-puppeteer-using-xpath
+    // Get the element. Returns an array of elements.
+    await page.$x('//*[@id="pagination-bottom"]/div[3]/a'); // View all button
+    const elements = await page.$x('//*[@id="pagination-bottom"]/div[3]/a');
+    await elements[0].click(); // Click 'View All'
+
+    // Print updated vesion of page ater clicking. After clicking View All, DOM changes
+    // (number of ul > li items increases)
+    // OLD METHOD: const response = await fetch(url);
+    debugger;
+    const response_pupp = await page.evaluate(() => {
+        
+    }); // returns Promise
+    debugger;
+    // OLD METHOD: const body = await response.text();
+    const body_pupp = await page.content(); // HERES YOUR ERROR!
+    debugger;
+
+    // Parse html for selector
+    const $ = await cheerio.load(body_pupp);
+    const titleList = [];
+    const locationList = [];
+
+    // Pulls job titles and pushes them to a list
+    const titleSelector = '#search-results-list > ul > li > a > h2';
+>>>>>>> 48e6cba2f5bab11bb951e63646caad655fe07cca
     $(titleSelector).each(
         (i, title) => {
             const titleNode = $(title);

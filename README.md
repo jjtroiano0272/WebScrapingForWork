@@ -1,6 +1,6 @@
 # WebScrapingForWork
 
-Provide the URL of a company job board, get back a list of current postings.
+## Provide the URL of a company job board, get back a list of current postings.
 
 ![Large GIF (1278x720)](https://user-images.githubusercontent.com/33912011/115772833-96badc00-a37d-11eb-91bb-36850e95e94a.gif)
 
