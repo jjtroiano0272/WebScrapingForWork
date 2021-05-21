@@ -8,8 +8,8 @@ Provide the URL of a company job board, get back a list of current postings.
 * [x] Port to JS
 * [ ] Support Pyperclip (or a JS analogue)
 * [ ] Accept a list of URLs
-* [ ] Iterate over the list of positions with the current scraper(url) function
-* [ ] Adapt to be able to click through prompts from the company's home page
+* [x] Iterate over the list of positions with the current scraper(url) function
+* [x] Adapt to be able to click through prompts from the company's home page
 * [ ] Integrate into a web app hosted on my page
 
 ### Finding the ```xpath``` 
