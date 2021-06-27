@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div style="margin: 0; padding: 0; margin-top: 25%; align-items: center; text-align: center;">
+        <h1>Hello, is this thing on?</h1>
+        <p id="testDemo" style="color: cornflowerblue;"></p>
+        <!-- <script>document.getElementById('testDemo').innerHTML = "taps penis";</script> -->
+        <script src="./fetchScraper.js">
+            document.getElementById('gartnerJobs').innerHTML = getGartner('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
+        </script>
+        <script>output().innerHTML;</script>
+        <!-- <script src="./fetchScraper.js">
+            document.getElementById("testDemo").innerHTML = getGartner('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
+            output();
+        </script> -->
+
+        <script src='./fetchScraper.js'></script>
+        <script>
+            document.getElementById('testDemo').innerHTML = passJsToHTML().penisVar;
+            alert(passJsToHTML.penisVar);
+        </script>
+    </div>
+    
+</body>
+</html>

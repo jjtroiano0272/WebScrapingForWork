@@ -7,6 +7,7 @@ const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const { URL, URLSearchParams } = require('url');
 
+var titleList = [];
 
 /* When fetch is called, it returns a promise which will resolve to a Response object 
 as soon as the server responds with the headers */ 
@@ -70,6 +71,7 @@ const getGartner = async (url) => {
     );
     
     // Print both lists together pairwise
+    document.getElementById("gartnerJobs").innerHTML = titleList.length+" jobs found!\n\n";
     console.log(titleList.length+" jobs found!\n\n");
     for (var i = 0; i < titleList.length - 1; i++) {
         console.log(titleList[i], "\n  ", locationList[i], "\n");
@@ -77,33 +79,21 @@ const getGartner = async (url) => {
     console.log(titleList.length+" jobs found!\n\n");
 
     await browser.close();
+
+
 }
-        
-{
-/* (async () => {
-	const url = new URL('https://some-url.com');
-	const params = { param: 'test'};
-	const queryParams = new URLSearchParams(params).toString();
-	url.search = queryParams;
-	
-	const fetchOptions = {
-		method: 'POST',
-		headers: { 'cookie': '<cookie>', },
-		body: JSON.string({ hello: 'world' }),
-	};
-
-	await fetch(url, fetchOptions);
-})();
-
-
-const newProductsPagePromise = fetch('https://some-website.com/new-products');
-const recommendedProductsPagePromise = fetch('https://some-website.com/recommended-products');
-
-// Returns a promise that resolves to a list of the results
-Promise.all([
-    newProductsPagePromise, 
-    recommendedProductsPagePromise
-]);  */ }
 
 // getReddit();
 getGartner('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
+
+// var penisVar = ''
+function passJsToHTML() {
+    //              input to html goes here
+    var penisVar = 'TAPPING A MF PENIS!';
+    // document.getElementById("testDemo").innerHTML = penisVar;
+    
+    getGartner('https://jobs.gartner.com/category/technology-jobs/494/58617/1');
+
+    // Testing the REAL data
+    document.getElementById("testDemo").innerHTML = titleList.length;
+}
